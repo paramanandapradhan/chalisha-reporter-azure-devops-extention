@@ -1,6 +1,8 @@
 #!/bin/bash
 #!/usr/bin/env bash
-openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 9125 -nodes
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 9125 -nodes \
+  -subj "/C=IN/ST=Karnataka/L=Bangalore/O=Cloudparker/OU=IT/CN=localhost/emailAddress=support@cloudparker.com" \
+  -addext "subjectAltName=DNS:localhost"
 
 
 # Country Name (2 letter code) []:IN
@@ -14,3 +16,12 @@ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 9125 -nod
 # npm run dev
 # open https://localhost:44301/ in chrome
 # Allow https security check...
+
+
+# MAKE TRUST THE CERTIFICATE
+# Import the certificate to Keychain Access (Mac):
+# Open Keychain Access (Applications > Utilities > Keychain Access).
+# Drag and drop the cert.pem file into the System or Login keychain.
+# Double-click the certificate in Keychain Access.
+# Expand the Trust section, and set When using this certificate to Always Trust.
+# Close the window and enter your Mac password to apply the changes.
