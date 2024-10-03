@@ -1,10 +1,10 @@
 {
   "name": "chalisha-reporter-azure-devops-extention",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
-    "dev": "npm run copy-dev-config; vite --port 44300",
+    "dev": "npm run copy-dev-config; vite --port 44301",
     "build-dev": "npm run copy-dev-config; vite build",
     "build-prod": "npm run copy-prod-config; vite build",
     "preview": "vite preview",

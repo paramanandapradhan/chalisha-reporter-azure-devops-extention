@@ -1,0 +1,48 @@
+{
+    "manifestVersion": 1,
+    "id": "cp-chalisha-reporter-azure-devops",
+    "publisher": "cloudparker",
+    "version": "0.0.2",
+    "name": "Chalisha Reporter",
+    "description": "Chalisha Reporter for Playwrite automation report in Azure DevOps",
+    "public": true,
+    "categories": [
+        "Azure Repos"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "logo.png"
+    },
+    "details": {
+        "path": "index.md"
+    },
+    "contributions": [
+        {
+            "id": "cp-chalisha-reporter-azure-devops-hub",
+            "type": "ms.vss-web.hub",
+            "targets": [
+                "ms.vss-code-web.code-hub-group"
+            ],
+            "properties": {
+                "name": "Chalisha Reporter",
+                "uri": "index.html",
+                "order": 100,
+                "icon": {
+                    "light": "src/icons/icon-32-black.png",
+                    "dark": "src/icons/icon-32-white.png"
+                }
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "dist",
+            "addressable": true,
+            "packagePath": "/"
+        }
+    ]
+}
