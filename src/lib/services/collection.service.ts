@@ -17,8 +17,8 @@ export class Collection {
     private userScope?: boolean;
     private scope?: { scopeType: string }
 
-    constructor(name: string, userScope?: boolean) {
-        this.name = name;
+    constructor(collectionName: string, userScope?: boolean) {
+        this.name = collectionName;
         this.userScope = userScope;
         if (this.userScope) {
             this.scope = { scopeType: "User" }
@@ -123,7 +123,7 @@ export class Collection {
             const docs = await manager.getDocuments(this.name, this.scope); // Retrieve all documents in the collection
             return docs as DocumentType<T>[]; // Cast and return the array of documents
         } catch (error) {
-            console.error("Error fetching all documents:", error);
+            // console.error("Error fetching all documents:", error);
             return []; // Return an empty array if an error occurs
         }
     }

@@ -53,17 +53,25 @@
   function handleSettingsChange() {
     ensureSettings();
   }
+
+  function handleSettingsClose() {
+    router = RoutersEnum.HOME;
+  }
 </script>
 
 <main class="min-h-full bg-base-50 dark:bg-base-900">
   <AppNavbar onSettings={handleSettings} />
   {#if router === RoutersEnum.HOME}
-    {#if settingsService}
-      <Home {settingsService}></Home>
+    {#if settingsService && reportService}
+      <Home {settingsService} {reportService}></Home>
     {/if}
   {:else if router === RoutersEnum.SETTINGS}
     {#if settingsService}
-      <Settings {settingsService} onChange={handleSettingsChange} />
+      <Settings
+        {settingsService}
+        onChange={handleSettingsChange}
+        onClose={handleSettingsClose}
+      />
     {/if}
   {:else if router === RoutersEnum.LOADER}
     <div class="p-4 flex justify-center items-center">

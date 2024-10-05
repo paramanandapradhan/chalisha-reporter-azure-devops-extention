@@ -4,10 +4,11 @@
 
     type PropsType = {
         onChange?: () => void;
+        onClose?: () => void;
         settingsService: SettingsService;
     };
 
-    let { onChange, settingsService }: PropsType = $props();
+    let { onChange, onClose, settingsService }: PropsType = $props();
 
     let blobStorageAccount: string = $state(
         settingsService.settings?.blobStorageAccount || "",
@@ -39,6 +40,10 @@
             await settingsService.load();
             onChange && onChange();
         }
+    }
+
+    function handleClose(){
+        onClose && onClose();
     }
 </script>
 
@@ -75,8 +80,9 @@
                 required
             />
         </div>
-        <div>
+        <div class="flex gap-3">
             <Button appearance="primary" type="submit">Save</Button>
+            <Button onClick={handleClose} appearance="base">Close</Button>
         </div>
     </form>
 </div>

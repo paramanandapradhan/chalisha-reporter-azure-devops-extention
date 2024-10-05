@@ -148,3 +148,25 @@ export function next30DaysEnd() {
     date.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
     return date;
 }
+
+/**
+ * Function to find IDs that are newly added to array2 compared to array1.
+ * @param array1 - The original array of IDs.
+ * @param array2 - The updated array of IDs.
+ * @returns An array of IDs that are present in array2 but not in array1.
+ */
+export function findAddedItems(array1: string[], array2: string[]): string[] {
+  const set1 = new Set(array1);
+  return array2.filter(id => !set1.has(id));
+}
+
+/**
+ * Function to find IDs that have been removed from array1 compared to array2.
+ * @param array1 - The original array of IDs.
+ * @param array2 - The updated array of IDs.
+ * @returns An array of IDs that are present in array1 but not in array2.
+ */
+export function findRemovedItems(array1: string[], array2: string[]): string[] {
+  const set2 = new Set(array2);
+  return array1.filter(id => !set2.has(id));
+}
