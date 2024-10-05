@@ -1,8 +1,9 @@
 import * as SDK from "azure-devops-extension-sdk";
 import { getDataServiceManager } from "./data.service";
+import { nanoid } from 'nanoid';
 
 
-export type Document<T> = {
+export type DocumentType<T> = {
     id?: string;
     cat?: number, // Created At
     uat?: number, // Updated At
@@ -10,6 +11,7 @@ export type Document<T> = {
     uby?: string, // Updated By
     data?: T; // any types of data
 }
+
 export class Collection {
     private name: string;
     private userScope?: boolean;
@@ -26,9 +28,8 @@ export class Collection {
     /**
     * Create a document in organization scope
     * */
-    async createReminder<T>(doc: Document<T>) {
-
-        doc.id = crypto.randomUUID();
+    async createReminder<T>(doc: DocumentType<T>) {
+        doc.id = nanoid();
         doc.cat = Date.now(); // created at
         doc.uat = Date.now(); // updated at
         let user = SDK.getUser();
@@ -47,7 +48,7 @@ export class Collection {
      * Create a new document in the collection
      * @param doc - The document to create
      */
-    async createDocument<T>(doc: Document<T>): Promise<Document<T>> {
+    async createDocument<T>(doc: DocumentType<T>): Promise<DocumentType<T>> {
         doc.id = crypto.randomUUID(); // Generate a unique ID for the document
         doc.cat = Date.now(); // Set created at timestamp
         doc.uat = Date.now(); // Set updated at timestamp
@@ -68,9 +69,8 @@ export class Collection {
      * Update an existing document in the collection
      * @param doc - The document to update
      */
-    async updateDocument<T>(doc: Document<T>): Promise<Document<T> | null> {
+    async updateDocument<T>(doc: DocumentType<T>): Promise<DocumentType<T> | null> {
         if (!doc.id) return null; // Return null if document ID is not provided
-
         doc.uat = Date.now(); // Set updated at timestamp
 
         const user = SDK.getUser(); // Get the current user information
@@ -101,13 +101,13 @@ export class Collection {
      * Get a document by its ID from the collection
      * @param docId - The ID of the document to retrieve
      */
-    async getDocumentById<T>(docId: string): Promise<Document<T> | null> {
+    async getDocumentById<T>(docId: string): Promise<DocumentType<T> | null> {
         if (!docId) return null; // Return null if document ID is not provided
 
         const manager = await getDataServiceManager();
         try {
             const doc = await manager.getDocument(this.name, docId, this.scope); // Retrieve the document by ID
-            return doc as Document<T>; // Cast and return the document
+            return doc as DocumentType<T>; // Cast and return the document
         } catch (error) {
             console.error("Error fetching document:", error);
             return null;
@@ -117,11 +117,11 @@ export class Collection {
     /**
      * Get all documents from the collection
      */
-    async getAllDocuments<T>(): Promise<Document<T>[]> {
+    async getAllDocuments<T>(): Promise<DocumentType<T>[]> {
         const manager = await getDataServiceManager();
         try {
             const docs = await manager.getDocuments(this.name, this.scope); // Retrieve all documents in the collection
-            return docs as Document<T>[]; // Cast and return the array of documents
+            return docs as DocumentType<T>[]; // Cast and return the array of documents
         } catch (error) {
             console.error("Error fetching all documents:", error);
             return []; // Return an empty array if an error occurs

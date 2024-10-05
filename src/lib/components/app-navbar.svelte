@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { Navbar } from "@cloudparker/moldex.js";
+	import { Navbar , Button} from "@cloudparker/moldex.js";
 	import * as SDK from "azure-devops-extension-sdk";
 	import logoUrl from "../../icons/logo.png";
+    import { mdiCog } from "../services/icon-service";
 
 	type PropsType = {
-		onCreate?: () => void;
+		onSettings?:()=>void
 	};
-	let { onCreate }: PropsType = $props();
+
+	let { onSettings }: PropsType = $props();
 
 	let isDarkMode: boolean | null = $state(null);
 
@@ -32,6 +34,16 @@
 			document.documentElement.classList.remove("dark");
 		}
 	}
+
+	function handleSettings() {
+		onSettings && onSettings();
+	}
 </script>
 
-<Navbar hasLogo logoImgSrc={logoUrl} hasTitle title="Chalisha Reporter" />
+{#snippet rightSnippet()}
+	<div class="flex h-full items-center">
+		<Button iconPath={mdiCog} className="!px-2" iconClassName="text-base-500" onClick={handleSettings} />
+	</div>
+{/snippet}
+
+<Navbar hasLogo logoImgSrc={logoUrl} hasTitle title="Chalisha Reporter" {rightSnippet} />

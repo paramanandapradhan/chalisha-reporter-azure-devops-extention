@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "cp-chalisha-reporter-dev",
     "publisher": "cloudparker",
-    "version": "0.0.4",
+    "version": "0.0.6",
     "name": "Chalisha Reporter Dev",
     "description": "Chalisha Reporter for Playwrite automation report in Azure DevOps",
     "public": false,

@@ -22,6 +22,7 @@
     "azure-devops-extension-api": "^4.243.0",
     "azure-devops-extension-sdk": "^4.0.2",
     "moment": "^2.30.1",
+    "nanoid": "^5.0.7",
     "postcss": "^8.4.47",
     "svelte": "^5.0.0-next.257",
     "svelte-check": "^4.0.2",
