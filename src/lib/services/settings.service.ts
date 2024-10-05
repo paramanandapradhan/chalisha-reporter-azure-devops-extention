@@ -6,13 +6,15 @@ const KEY_SETTINGS = 'cp-chalisha-reporter.settings'
 export const KEY_SETTINGS_CONTEXT = Symbol(KEY_SETTINGS);
 
 export type SettingType = {
-    blobSasUrl?: string;
+    blobStorageAccount?: string;
+    blobStorageContainer?: string;
+    blobStorageSasToken?: string;
 }
 
 
 export class SettingsService {
 
-    settings: any = null;
+    settings: SettingType = {};
 
     constructor() {
     }
@@ -31,46 +33,40 @@ export class SettingsService {
         }
     }
 
-    hasBlobSasTokenUrl(): boolean {
+    get hasRequiredSettings(): boolean {
         if (this.settings) {
-            return !!this.settings.blobSasUrl;
+            return !!(this.settings.blobStorageAccount && this.settings.blobStorageContainer && this.settings.blobStorageSasToken);
         }
         return false;
     }
 
-    getBlobSasTokenUrl(): string | null {
+    get sasUrl(): string | null {
         if (this.settings) {
-            return this.settings.blobSasUrl;
+            return `https://${this.settings.blobStorageAccount}.blob.core.windows.net?${this.settings.blobStorageSasToken}`;
         }
         return null;
     }
 
-    getBlobUrl(): string | null {
-        if (this.settings?.blobSasUrl) {
-            try {
-                const blobUrl = new URL(this.settings.blobSasUrl);
-                blobUrl.search = "";
-                return blobUrl.href;
-            } catch (error) {
-                console.error("Failed to parse Blob URL:", error);
-                return null;
-            }
+    get blobHost(): string | null {
+        if (this.settings) {
+            return `https://${this.settings.blobStorageAccount}.blob.core.windows.net`;
         }
         return null;
     }
 
-    getBlobSasToken(): string | null {
-        if (this.settings?.blobSasUrl) {
-            try {
-                const blobUrl = new URL(this.settings.blobSasUrl);
-                const sasToken = blobUrl.search;
-                return sasToken ? sasToken : null;
-            } catch (error) {
-                console.error("Failed to parse Blob SAS Token:", error);
-                return null;
-            }
-        }
 
-        return null;
+    get sasToken() {
+        return this.settings.blobStorageSasToken || null
     }
+
+    get container() {
+        return this.settings.blobStorageContainer || null
+    }
+
+    get account() {
+        return this.settings.blobStorageAccount || null
+    }
+
+
+    // sv=2022-11-02&ss=bfqt&srt=c&sp=rwdlacupiytfx&se=2025-05-14T22:34:59Z&st=2024-10-05T14:34:59Z&spr=https&sig=PKv0YzdQTiiA0oaOFPMMx9r3hho6GbQmSVTkGx5cONM%3D
 }

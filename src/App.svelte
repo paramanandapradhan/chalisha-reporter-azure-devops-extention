@@ -7,7 +7,8 @@
   import Settings from "./lib/components/settings.svelte";
   import { SettingsService } from "./lib/services/settings.service";
   import { Spinner } from "@cloudparker/moldex.js";
-    import Home from "./lib/components/home.svelte";
+  import Home from "./lib/components/home.svelte";
+  import { ReportService } from "./lib/services/report.service";
 
   enum RoutersEnum {
     SETTINGS,
@@ -16,24 +17,29 @@
   }
 
   let settingsService: SettingsService | null = $state(null);
+  let reportService: ReportService | null = $state(null);
 
   let router: RoutersEnum = $state(RoutersEnum.LOADER);
 
   $effect(() => {
     if (!settingsService) {
       SDK.ready().then(async () => {
-        ensureSettings();
+        await ensureSettings();
+        if (settingsService) {
+          reportService = await new ReportService(settingsService).load();
+        }
       });
     }
   });
 
   async function ensureSettings() {
     settingsService = settingsService || (await new SettingsService().load());
-    if (settingsService && !settingsService.hasBlobSasTokenUrl()) {
+    if (settingsService && !settingsService.hasRequiredSettings) {
       router = RoutersEnum.SETTINGS;
     } else {
       router = RoutersEnum.HOME;
     }
+    return settingsService;
   }
 
   function handleSettings() {

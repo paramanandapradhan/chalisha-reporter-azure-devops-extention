@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, TextareaField, showToast } from "@cloudparker/moldex.js";
+    import { Button, TextField, showToast } from "@cloudparker/moldex.js";
     import { type SettingsService } from "../services/settings.service";
 
     type PropsType = {
@@ -9,21 +9,33 @@
 
     let { onChange, settingsService }: PropsType = $props();
 
-    let blobSasUrl: string = $state(settingsService.getBlobSasTokenUrl()||'');
+    let blobStorageAccount: string = $state(
+        settingsService.settings?.blobStorageAccount || "",
+    );
+    let blobStorageContainer: string = $state(
+        settingsService.settings?.blobStorageContainer || "",
+    );
+    let blobStorageSasToken: string = $state(
+        settingsService.settings?.blobStorageSasToken || "",
+    );
 
     async function handeleSubmit(ev: SubmitEvent) {
         ev.preventDefault();
-        let url = (blobSasUrl || "").trim();
+        blobStorageAccount = (blobStorageAccount || "").trim();
+        blobStorageContainer = (blobStorageContainer || "").trim();
+        blobStorageSasToken = (blobStorageSasToken || "").trim();
 
-        if (settingsService && url) {
-            if (
-                !url.startsWith("https") ||
-                url.indexOf("blob.core.windows.net") == -1 ||
-                url.indexOf("sig=") == -1
-            ) {
-                return showToast({ msg: "Looks like incorrect SAS Token Url" });
-            }
-            await settingsService.setSettings({ blobSasUrl: url });
+        if (
+            settingsService &&
+            blobStorageAccount &&
+            blobStorageContainer &&
+            blobStorageSasToken
+        ) {
+            await settingsService.setSettings({
+                blobStorageAccount,
+                blobStorageContainer,
+                blobStorageSasToken,
+            });
             await settingsService.load();
             onChange && onChange();
         }
@@ -34,21 +46,34 @@
     <h3 class="text-xl">Extension Settings</h3>
     <form onsubmit={handeleSubmit}>
         <div class="my-4">
-            <div>
-                <TextareaField
-                    name="blobSasUrl"
-                    label="Enter Azure Blob Store SAS URL"
-                    placeholder="SAS Token URL"
-                    bind:value={blobSasUrl}
-                    maxlength={500}
-                    required
-                />
-            </div>
-
-            <div class="text-xs text-base-400 mt-1">
-                e.g.
-                https://mystorageaccount.blob.core.windows.net/reports?sv=2021-04-10&amp;ss=b&amp;srt=sco&amp;sp=rwdlacupx&amp;se=2023-12-31T23:59:59Z&amp;st=2023-01-01T00:00:00Z&amp;spr=https&amp;sig=J5Ynv1lEXAMPLEjB3O%2BFfO8bU1S65ZqQPRaEXAMPLEqLg%3D
-            </div>
+            <TextField
+                name="blobStorageAccount"
+                label="Account Name"
+                placeholder="Azure Blob Storage Account Name"
+                bind:value={blobStorageAccount}
+                maxlength={100}
+                required
+            />
+        </div>
+        <div class="my-4">
+            <TextField
+                name="blobStorageContainer"
+                label="Container Name"
+                placeholder="Azure Blob Storage Container Name"
+                bind:value={blobStorageContainer}
+                maxlength={100}
+                required
+            />
+        </div>
+        <div class="my-4">
+            <TextField
+                name="blobStorageSasToken"
+                label="SAS Token"
+                placeholder="Add only SAS token"
+                bind:value={blobStorageSasToken}
+                maxlength={300}
+                required
+            />
         </div>
         <div>
             <Button appearance="primary" type="submit">Save</Button>

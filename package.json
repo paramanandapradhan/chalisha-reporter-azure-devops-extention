@@ -13,6 +13,7 @@
     "copy-dev-config": "cp ./flavours/dev/vss-extension.json ./"
   },
   "devDependencies": {
+    "@azure/storage-blob": "^12.25.0",
     "@cloudparker/easy-cropperjs-svelte": "^2.4.0",
     "@cloudparker/easy-script-loader-svelte": "^4.0.0",
     "@cloudparker/moldex.js": "^0.0.49",
