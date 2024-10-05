@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { ReportService } from "../services/report.service";
     import type { SettingsService } from "../services/settings.service";
-    import AppDetails from "./app-details.svelte";
+    import TestSummary from "./test-summary.svelte";
 
     type PropsType = {
         settingsService: SettingsService;
@@ -24,7 +24,7 @@
     </div> -->
     <div class="bg-base-100 p-4 rounded">
         {#each appNames as appName}
-            <AppDetails {appName}></AppDetails>
+            <TestSummary {appName} {reportService} {settingsService} />
         {/each}
     </div>
 </div>
