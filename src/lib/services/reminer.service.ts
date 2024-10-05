@@ -79,7 +79,7 @@ export async function createReminder(reminder: ReminderType) {
             reminder.cbyn = user.displayName;
             reminder.ubyn = user.displayName;
         }
-        if (import.meta.env.DEV) {
+        if (import.meta.env.DEV && false) {
             store.push(reminder);
         } else {
             const manager = await getDataService();
@@ -116,7 +116,7 @@ export async function updateReminder(reminder: ReminderType) {
 // Remove a document in organization scope
 export async function removeReminder(reminder: ReminderType) {
     if (reminder?.id) {
-        if (import.meta.env.DEV) {
+        if (import.meta.env.DEV && false) {
             let index = store.findIndex((o) => o.id == reminder.id);
             if (index >= 0) {
                 store.splice(index, 1);
@@ -160,3 +160,5 @@ export async function getAllReminders() {
         return []
     }
 }
+
+ 
