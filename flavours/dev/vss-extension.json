@@ -1,6 +1,6 @@
 {
     "manifestVersion": 1,
-    "id": "cp-chalisha-reporter-azure-devops-dev",
+    "id": "cp-chalisha-reporter-dev",
     "publisher": "cloudparker",
     "version": "0.0.4",
     "name": "Chalisha Reporter Dev",
@@ -23,7 +23,7 @@
     },
     "contributions": [
         {
-            "id": "cp-chalisha-reporter-azure-devops-hub",
+            "id": "cp-chalisha-reporter-dev-hub",
             "type": "ms.vss-web.hub",
             "targets": [
                 "ms.vss-code-web.code-hub-group"
