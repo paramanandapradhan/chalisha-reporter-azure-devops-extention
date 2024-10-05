@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Collection } from "../services/collection.service";
-    import { dateFormat, toDate, Button } from "@cloudparker/moldex.js";
+    import { Button, dateFormat, sort, toDate } from "@cloudparker/moldex.js";
+    import { Collection, type DocumentType } from "../services/collection.service";
     import { mdiArrowRight, mdiFileDocumentOutline } from "../services/icon-service";
     import type { ReportService, TestResultType } from "../services/report.service";
     import type { SettingsService } from "../services/settings.service";
@@ -12,16 +12,34 @@
         appName?: string;
     };
 
+    type ResultDocumentType = DocumentType<TestResultType> & {
+        mesurmentClassName?:string;
+    }
+
     let { settingsService, reportService, appName }: PropsType = $props();
      
     let collection = $derived.by(() => {
         if (appName) {
-            return new Collection(appName);
+            return new Collection< ResultDocumentType, TestResultType>(appName);
         }
     });
+
     let resultItems = $derived.by(async () => {
         if (collection) {
-            let items = await collection.getAllDocuments<TestResultType>();
+            let items = await collection.getAllDocuments ()  ;
+                items= items.map((o)=>{
+                    o.date =  toDate(o.data?.startTime);
+                    if (o.data?.passedTests == o.data?.totalTests){
+                        o.mesurmentClassName = 'text-green-600'
+                    }else if((o.data?.passedTests||0 ) < (o.data?.totalTests || 0)){
+                        o.mesurmentClassName = 'text-red-600'
+                    } else {
+                        o.mesurmentClassName = 'text-base-600'
+                    }
+                    
+                    return o;
+                });
+            items = sort({array: items, field: 'date', isDate: true, desc: true})
             console.log("items", items);
             return items;
         }
@@ -41,7 +59,7 @@
                         <div class="text-base-500 flex-grow py-2">
                             { dateFormat(toDate(item?.data?.startTime)!)}
                         </div>
-                        <div class="px-3 font-black {item?.data?.passedTests==item?.data?.totalTests? 'text-green-600':'text-base-600'} ">
+                        <div class="px-3 font-black {item.mesurmentClassName} ">
                             {item?.data?.passedTests} / {item?.data?.totalTests}
                         </div>
                        <div>
