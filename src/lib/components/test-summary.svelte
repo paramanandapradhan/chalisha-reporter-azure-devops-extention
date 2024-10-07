@@ -5,6 +5,7 @@
     import type { ReportService, TestResultType } from "../services/report.service";
     import type { SettingsService } from "../services/settings.service";
     import TestResultChart from "./test-result-chart.svelte";
+    import TestResultSummaryChart from "./test-result-summary-chart.svelte";
 
     
 
@@ -27,7 +28,8 @@
     });
 
     let selectedResult : TestResultType | null = $state(null)
-    let testResultChartRef: any = $state(null);
+    let testResultChartRef: any |null = $state(null);
+    let testResultSummaryChartRef:any = $state(null);
 
     let resultItems = $derived.by(async () => {
         if (collection) {
@@ -46,22 +48,37 @@
                 });
             items = sort({array: items, field: 'date', isDate: true, desc: true});
 
-            if (items[0]?.data) {
-                selectResult (items[0]?.data);
+            console.log('items', items);
+
+            if(items?.length){
+                let results = items?.map((item)=>item.data!)
+                  selectTestResults(results);
             }
-            
+           
+            if (items[0]?.data) {
+                selectTestResult(items[0]?.data);
+            }
+
+          
+            console.log('return items ' );
             return items;
         }
     });
 
     function handleSelectItem(item: ResultDocumentType){
         if(item?.data){
-            selectResult (item.data  );
+            selectTestResult(item.data  );
         }
        
     }
 
-    function selectResult(result:TestResultType){
+    function selectTestResults(results:TestResultType[]){
+        if (testResultSummaryChartRef && results) {
+             testResultSummaryChartRef.setTestResults(results);
+        }
+    }
+
+    function selectTestResult(result:TestResultType){
         selectedResult = result;
         if (testResultChartRef) {
             testResultChartRef.setTestResult(selectedResult);
@@ -74,8 +91,8 @@
         <h3 class="text-xl uppercase font-bold">{appName}</h3>
     </div>
     
-    <div class="flex items-start h-64 gap-8">
-        <div class="flex-1 h-full overflow-y-auto">
+    <div class="flex items-start gap-8">
+        <div class="flex-1 h-64  overflow-y-auto">
             {#await resultItems then items}
                 {#each items || [] as item}
                     <div class=" flex items-center w-full bg-base-200 hover:bg-base-300 pl-4 pr-2 rounded my-1 gap-2">
@@ -97,10 +114,10 @@
             {/await}
         </div>
         <div class="flex-1">
-             
-            <TestResultChart  bind:this={testResultChartRef} />
-             
+            <TestResultChart  bind:this={testResultChartRef} /> 
         </div>
-        <div class="flex-1"></div>
+        <div class="flex-1">
+            <TestResultSummaryChart  bind:this={testResultSummaryChartRef} />
+        </div> 
     </div>
 </div>

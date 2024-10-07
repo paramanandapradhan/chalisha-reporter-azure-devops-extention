@@ -50,7 +50,7 @@ export class Collection<T  extends DocumentType<R>, R > {
      * @param doc - The document to create
      */
     async createDocument(doc: T): Promise<T> {
-        doc.id = crypto.randomUUID(); // Generate a unique ID for the document
+        doc.id = doc.id || crypto.randomUUID(); // Generate a unique ID for the document
         doc.cat = Date.now(); // Set created at timestamp
         doc.uat = Date.now(); // Set updated at timestamp
 

@@ -6,6 +6,8 @@
     // Chart.js instance
 
     let chart: Chart | null;
+    let clientWidth: number = $state(0);
+    let clientHeight: number = $state(0);
 
     export function setTestResult(testResult: TestResultType) {
         const chartData = {
@@ -56,13 +58,16 @@
 
         if (chartCanvas && chartData && chartOptions) {
             if (chart) {
-                chart.destroy();
+                chart.data = chartData as any;
+                chart.options = chartOptions;
+                chart.update();
+            } else {
+                chart = new Chart(chartCanvas, {
+                    type: "doughnut",
+                    data: chartData,
+                    options: chartOptions,
+                }) as any;
             }
-            chart = new Chart(chartCanvas, {
-                type: "doughnut",
-                data: chartData,
-                options: chartOptions,
-            }) as any;
         }
     }
 
@@ -76,9 +81,11 @@
     });
 </script>
 
-<!-- Tailwind classes to set size and center the canvas -->
 <div
     class="flex justify-center items-center border p-1 rounded-md bg-base-200 w-full h-64"
+    bind:clientHeight
+    bind:clientWidth
 >
-    <canvas bind:this={chartCanvas} class="w-full h-full"></canvas>
+    <canvas bind:this={chartCanvas} width={clientWidth} height={clientHeight}
+    ></canvas>
 </div>

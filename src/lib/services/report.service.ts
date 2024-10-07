@@ -56,9 +56,11 @@ export class ReportService {
 
         let addedIds = findAddedItems(collectionReportsIds, storageReportsIds);
         if (addedIds?.length) {
+            console.log('addedIds', collectionReportsIds, addedIds);
             await Promise.all(addedIds.map(async (id: string) => {
                 let doc = await this.fetchTestResult(appName, id);
                 if (doc) {
+                    console.log('doc', id, doc)
                     await collection.createDocument({ id: id, data: doc })
                 }
             }));
@@ -81,7 +83,7 @@ export class ReportService {
         // Get the block blob client for the specific file
         const blockBlobClient = containerClient.getBlockBlobClient(filePath);
 
-        console.log(`Fetching file from: ${blobUrl}`);
+        // console.log(`Fetching file from: ${blobUrl}`);
 
         // Check if the blob exists before attempting to download
         const blobExists = await blockBlobClient.exists();
