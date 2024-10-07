@@ -4,7 +4,9 @@
     import { mdiArrowRight, mdiFileDocumentOutline } from "../services/icon-service";
     import type { ReportService, TestResultType } from "../services/report.service";
     import type { SettingsService } from "../services/settings.service";
+    import TestResultChart from "./test-result-chart.svelte";
 
+    
 
     type PropsType = {
         settingsService: SettingsService;
@@ -24,9 +26,12 @@
         }
     });
 
+    let selectedResult : TestResultType | null = $state(null)
+    let testResultChartRef: any = $state(null);
+
     let resultItems = $derived.by(async () => {
         if (collection) {
-            let items = await collection.getAllDocuments ()  ;
+            let items = await collection.getAllDocuments ();
                 items= items.map((o)=>{
                     o.date =  toDate(o.data?.startTime);
                     if (o.data?.passedTests == o.data?.totalTests){
@@ -39,11 +44,29 @@
                     
                     return o;
                 });
-            items = sort({array: items, field: 'date', isDate: true, desc: true})
-            console.log("items", items);
+            items = sort({array: items, field: 'date', isDate: true, desc: true});
+
+            if (items[0]?.data) {
+                selectResult (items[0]?.data);
+            }
+            
             return items;
         }
     });
+
+    function handleSelectItem(item: ResultDocumentType){
+        if(item?.data){
+            selectResult (item.data  );
+        }
+       
+    }
+
+    function selectResult(result:TestResultType){
+        selectedResult = result;
+        if (testResultChartRef) {
+            testResultChartRef.setTestResult(selectedResult);
+        }
+    }
 </script>
 
 <div>
@@ -51,11 +74,11 @@
         <h3 class="text-xl uppercase font-bold">{appName}</h3>
     </div>
     
-    <div class="flex items-start h-64">
+    <div class="flex items-start h-64 gap-8">
         <div class="flex-1 h-full overflow-y-auto">
             {#await resultItems then items}
                 {#each items || [] as item}
-                    <div class=" flex items-center w-full bg-base-200 hover:bg-base-300 pl-4 pr-2 rounded my-1 gap-3">
+                    <div class=" flex items-center w-full bg-base-200 hover:bg-base-300 pl-4 pr-2 rounded my-1 gap-2">
                         <div class="text-base-500 flex-grow py-2">
                             { dateFormat(toDate(item?.data?.startTime)!)}
                         </div>
@@ -66,13 +89,18 @@
                             <Button className="!px-2 !text-base-500" iconPath={mdiFileDocumentOutline} iconClassName="!w-4 !h-4" ></Button>
                        </div>
                        <div>
-                        <Button className="!px-2 !text-base-500" iconPath={mdiArrowRight} iconClassName="!w-4 !h-4" ></Button>
+                        <Button className="!px-2  {selectedResult?.runId == item.data?.runId?'!bg-primary-500 !text-base-50' :'!text-base-500'}" 
+                        iconPath={mdiArrowRight} iconClassName="!w-4 !h-4" onClick={()=>handleSelectItem(item)} ></Button>
                    </div>
                     </div>
                 {/each}
             {/await}
         </div>
-        <div class="flex-1"></div>
+        <div class="flex-1">
+             
+            <TestResultChart  bind:this={testResultChartRef} />
+             
+        </div>
         <div class="flex-1"></div>
     </div>
 </div>

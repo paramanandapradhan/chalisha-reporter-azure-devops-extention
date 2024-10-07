@@ -16,7 +16,7 @@ export type TestResultType = {
     skippedTests?: number;
     runId?: string;
     startTime?: string;
-    status?: 'pased' | 'failed';
+    status?: 'passed' | 'failed';
 }
 
 export class ReportService {
