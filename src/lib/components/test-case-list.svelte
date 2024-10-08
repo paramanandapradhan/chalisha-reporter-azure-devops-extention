@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Button, Icon } from "@cloudparker/moldex.js";
     import { mdiCheckCircle, mdiCloseCircle } from "../services/icon-service";
+    import { browsersColors } from "../services/utils.service";
 
     type PropsType = {
         tests: any[];
@@ -27,7 +28,9 @@
 <div>
     {#each filteredTests || [] as test, index}
         <hr />
-        <Button className="text-start justify-start w-full hover:bg-base-100 py-4 gap-4">
+        <Button
+            className="text-start justify-start w-full hover:bg-base-100 py-4 gap-4"
+        >
             <div>
                 <Icon
                     path={test.status == "passed"
@@ -39,8 +42,21 @@
                 />
             </div>
             <div class="flex-grow">
-                <div>
-                    {test.test?.title || ""}
+                <div class="flex align-center gap-4">
+                    <div>
+                        {test.test?.title || ""}
+                    </div>
+                    {#if test?.browser?.name}
+                        {@const color = browsersColors[test?.browser?.name]}
+                        <div>
+                            <span
+                                class="border rounded-full text-sm px-2"
+                                style="background-color:{color}22;border-color:{color};color:{color};"
+                            >
+                                {test?.browser?.name}
+                            </span>
+                        </div>
+                    {/if}
                 </div>
                 <div class="text-sm text-base-400">
                     {test.test?.location || ""}

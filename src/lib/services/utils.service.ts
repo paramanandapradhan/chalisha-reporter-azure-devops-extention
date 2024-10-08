@@ -1,3 +1,13 @@
+
+export const browsersColors: any = {
+    chromium: "#1E90FF", // Dodger Blue
+    firefox: "#FF4500", // Orange Red
+    webkit: "#228B22", // Forest Green
+    chrome: "#8B0000", // Dark Red
+    edge: "#2F4F4F", // Dark Slate Gray
+    safari: "#483D8B", // Dark Slate Blue
+};
+
 export function todayStart() {
     let date = new Date();
     date.setHours(0, 0, 0, 0)
