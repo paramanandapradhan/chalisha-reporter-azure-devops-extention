@@ -67,8 +67,8 @@ export class ReportService {
         }
     }
 
-    private async fetchTestResult(appName: string, runId: string) {
-        const filePath = `${chalishaReporterPrefixPath}/${appName}/${runId}/result.json`;
+    private async fetchJsonFile(filePath: string) {
+        // const filePath = `${chalishaReporterPrefixPath}/${appName}/${runId}/result.json`;
         const accountName = this.settingsService.account;
         const container = this.settingsService.container as string;
         const sasToken = this.settingsService.sasToken;
@@ -107,6 +107,16 @@ export class ReportService {
             console.error(error);
         }
         return null;
+    }
+
+    public async fetchTestReport(appName: string, runId: string) {
+        const filePath = `${chalishaReporterPrefixPath}/${appName}/${runId}/report.json`;
+        return await this.fetchJsonFile(filePath);
+    }
+
+    public async fetchTestResult(appName: string, runId: string) {
+        const filePath = `${chalishaReporterPrefixPath}/${appName}/${runId}/result.json`;
+        return await this.fetchJsonFile(filePath);
     }
 
     private async loadFoldersInPath(prefixPath: string) {

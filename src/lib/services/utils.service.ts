@@ -156,8 +156,8 @@ export function next30DaysEnd() {
  * @returns An array of IDs that are present in array2 but not in array1.
  */
 export function findAddedItems(array1: string[], array2: string[]): string[] {
-  const set1 = new Set(array1);
-  return array2.filter(id => !set1.has(id));
+    const set1 = new Set(array1);
+    return array2.filter(id => !set1.has(id));
 }
 
 /**
@@ -167,6 +167,28 @@ export function findAddedItems(array1: string[], array2: string[]): string[] {
  * @returns An array of IDs that are present in array1 but not in array2.
  */
 export function findRemovedItems(array1: string[], array2: string[]): string[] {
-  const set2 = new Set(array2);
-  return array1.filter(id => !set2.has(id));
+    const set2 = new Set(array2);
+    return array1.filter(id => !set2.has(id));
 }
+
+export type GroupedObject<T> = {
+    [key: string]: T[];
+};
+
+export function groupBy<T>(array: T[], key: string): GroupedObject<T> {
+    return array.reduce((result, currentValue) => {
+        const groupKey = getValue(currentValue, key) as unknown as string;
+        if (!result[groupKey]) {
+            result[groupKey] = [];
+        }
+        result[groupKey].push(currentValue);
+        return result;
+    }, {} as GroupedObject<T>);
+}
+
+export function getValue<T>(obj: T, path: string): any {
+    if (!path) return undefined;
+    const keys = path.split('.');
+    return keys.reduce((acc: any, key: string) => (acc && acc[key] !== undefined) ? acc[key] : undefined, obj);
+}
+

@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { Button, dateFormat, sort, toDate } from "@cloudparker/moldex.js";
+    import { Button, dateFormat, sort, toDate , openLoadingDialog} from "@cloudparker/moldex.js";
     import { Collection, type DocumentType } from "../services/collection.service";
     import { mdiArrowRight, mdiFileDocumentOutline } from "../services/icon-service";
     import type { ReportService, TestResultType } from "../services/report.service";
     import type { SettingsService } from "../services/settings.service";
     import TestResultChart from "./test-result-chart.svelte";
     import TestResultSummaryChart from "./test-result-summary-chart.svelte";
+    import { openTestReportDialog } from "../services/reports.ui.service";
 
     
 
@@ -84,6 +85,18 @@
             testResultChartRef.setTestResult(selectedResult);
         }
     }
+
+    async function  handleOpenReport(item: TestResultType){
+        if(appName &&  item?.runId){
+            let loader = await openLoadingDialog();
+            let reportJson = await reportService.fetchTestReport(appName, item.runId );
+            loader.closeDialog();
+            if(reportJson) {
+                openTestReportDialog(reportJson);
+            }   
+        }
+
+    }
 </script>
 
 <div>
@@ -96,14 +109,14 @@
             {#await resultItems then items}
                 {#each items || [] as item}
                     <div class=" flex items-center w-full bg-base-200 hover:bg-base-300 pl-4 pr-2 rounded my-1 gap-2">
-                        <div class="text-base-500 flex-grow py-2">
-                            { dateFormat(toDate(item?.data?.startTime)!)}
+                        <div class="text-base-500 text-sm flex-grow py-2" title="{dateFormat(toDate(item?.data?.startTime)!)}">
+                            { dateFormat(toDate(item?.data?.startTime)!, 'DD MMM hh:mm a')}
                         </div>
                         <div class="px-3 font-black {item.mesurmentClassName} ">
                             {item?.data?.passedTests} / {item?.data?.totalTests}
                         </div>
                        <div>
-                            <Button className="!px-2 !text-base-500" iconPath={mdiFileDocumentOutline} iconClassName="!w-4 !h-4" ></Button>
+                            <Button className="!px-2 !text-base-500" iconPath={mdiFileDocumentOutline} iconClassName="!w-4 !h-4" onClick={()=>handleOpenReport(item.data!)}></Button>
                        </div>
                        <div>
                         <Button className="!px-2  {selectedResult?.runId == item.data?.runId?'!bg-primary-500 !text-base-50' :'!text-base-500'}" 
