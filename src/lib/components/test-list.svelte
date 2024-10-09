@@ -2,6 +2,8 @@
     import { Button, Icon } from "@cloudparker/moldex.js";
     import { mdiCheckCircle, mdiCloseCircle } from "../services/icon-service";
     import { browsersColors } from "../services/utils.service";
+    import BrowerNameChip from "./brower-name-chip.svelte";
+    import { openTestDetailsDialog } from "../services/reports.ui.service";
 
     type PropsType = {
         tests: any[];
@@ -23,6 +25,12 @@
             return tests;
         }
     });
+
+    function handleOpenTestDetails(test: any) {
+        if (test) {
+            openTestDetailsDialog(test)
+        }
+    }
 </script>
 
 <div>
@@ -30,6 +38,7 @@
         <hr />
         <Button
             className="text-start justify-start w-full hover:bg-base-100 py-4 gap-4"
+            onClick={() => handleOpenTestDetails(test)}
         >
             <div>
                 <Icon
@@ -46,17 +55,11 @@
                     <div>
                         {test.test?.title || ""}
                     </div>
-                    {#if test?.browser?.name}
-                        {@const color = browsersColors[test?.browser?.name]}
-                        <div>
-                            <span
-                                class="border rounded-full text-sm px-2"
-                                style="background-color:{color}22;border-color:{color};color:{color};"
-                            >
-                                {test?.browser?.name}
-                            </span>
-                        </div>
-                    {/if}
+                    <div>
+                        {#if test?.browser?.name}
+                            <BrowerNameChip name={test?.browser?.name} />
+                        {/if}
+                    </div>
                 </div>
                 <div class="text-sm text-base-400">
                     {test.test?.location || ""}

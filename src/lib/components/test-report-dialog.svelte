@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Button, mdiChevronRight, mdiChevronDown } from "@cloudparker/moldex.js";
     import { groupBy, type GroupedObject } from "../services/utils.service";
-    import TestCaseList from "./test-case-list.svelte";
     import { slide } from "svelte/transition";
+    import TestList from "./test-list.svelte";
 
     type PropsType = {
         reportJson: any;
@@ -39,7 +39,7 @@
             />
             {#if selectedGroup == groupKey}
                 <div transition:slide>
-                    <TestCaseList tests={reportGroups[groupKey]} />
+                    <TestList tests={reportGroups[groupKey]} />
                 </div>
             {/if}
         </div>
