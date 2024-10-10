@@ -3,6 +3,7 @@
     import BrowerNameChip from "./brower-name-chip.svelte";
     import { mdiCloseCircle } from "../services/icon-service";
     import TestStepsCard from "./test-steps-card.svelte";
+    import TestErrorCard from "./test-error-card.svelte";
 
     type PropsType = {
         test: any;
@@ -52,4 +53,9 @@
     <div class="my-6 bg-base-100">
         <TestStepsCard {test} />
     </div>
+    {#if test?.error}
+        <div class="my-6">
+            <TestErrorCard {test} />
+        </div>
+    {/if}
 </div>
