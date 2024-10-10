@@ -7,6 +7,7 @@
         mdiCloseCircle,
     } from "../services/icon-service";
     import { slide } from "svelte/transition";
+    import TestSteps from "./test-steps.svelte";
 
     type PropsType = {
         test: any;
@@ -25,14 +26,13 @@
                 className="w-full !justify-start !rounded-none"
                 iconPath={isStepsOpen ? mdiChevronDown : mdiChevronRight}
                 label="Test Steps"
-                onClick={() => isStepsOpen=!isStepsOpen}
+                onClick={() => (isStepsOpen = !isStepsOpen)}
             />
         </div>
         {#if isStepsOpen}
-                <div transition:slide>
-                    
-                </div>
-            {/if}
-
+            <div transition:slide class="p-4">
+                <TestSteps steps={test.steps} />
+            </div>
+        {/if}
     </div>
 </div>

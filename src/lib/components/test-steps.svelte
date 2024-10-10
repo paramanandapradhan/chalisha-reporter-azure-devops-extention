@@ -7,17 +7,19 @@
         mdiCloseCircle,
     } from "../services/icon-service";
     import { slide } from "svelte/transition";
+    import TestStep from "./test-step.svelte";
 
     type PropsType = {
         steps: any[];
     };
 
     let { steps }: PropsType = $props();
-
-    
 </script>
- 
+
 <div>
-
-
+    {#each steps as step, index}
+        <div>
+            <TestStep {step} />
+        </div>
+    {/each}
 </div>

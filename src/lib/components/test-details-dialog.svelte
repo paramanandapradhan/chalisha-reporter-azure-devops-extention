@@ -2,6 +2,7 @@
     import { Icon, mdiCheckCircle } from "@cloudparker/moldex.js";
     import BrowerNameChip from "./brower-name-chip.svelte";
     import { mdiCloseCircle } from "../services/icon-service";
+    import TestStepsCard from "./test-steps-card.svelte";
 
     type PropsType = {
         test: any;
@@ -26,24 +27,29 @@
             </div>
         </div>
         <div>
-            <span class="text-sm text-base-500">{test?.duration || "0"} ms</span
-            >
+            <span class="text-sm text-base-500">
+                {test?.duration || "0"} ms
+            </span>
         </div>
     </div>
     <div class="flex w-full border-b border-base-300">
-        <div class="flex items-center gap-4 py-3 border-b-2 border-base-500 bg-base-200 px-4">
+        <div
+            class="flex items-center gap-4 py-3 border-b-2 border-base-500 bg-base-200 px-4"
+        >
             <div class="">
                 <Icon
-                    path={test.status == "passed" ? mdiCheckCircle : mdiCloseCircle}
+                    path={test.status == "passed"
+                        ? mdiCheckCircle
+                        : mdiCloseCircle}
                     className=" {test.status == 'passed'
                         ? 'text-green-600'
                         : 'text-red-600'}"
                 />
             </div>
-            <div class="">
-                Run
-            </div>
+            <div class="">Run</div>
         </div>
-        
+    </div>
+    <div class="my-6 bg-base-100">
+        <TestStepsCard {test} />
     </div>
 </div>
