@@ -1,7 +1,7 @@
 <script lang="ts">
     import Prism from "prismjs";
     import "prismjs/themes/prism.css"; // Import the default theme or use a custom theme
-    let { test }: { test: any } = $props();
+    let { error, test }: { error: any; test: any } = $props();
 
     // Load any additional language you want to support, for example:
     import "prismjs/components/prism-javascript";
@@ -72,14 +72,14 @@
     }
 </script>
 
-{#if test?.error}
+{#if error}
     <div class="w-full">
         <!-- Error Message Section -->
         <div class="text-lg text-red-500 mb-2">Error Message:</div>
         <div
             class="bg-gray-800 text-gray-200 p-4 rounded-lg whitespace-pre-wrap border-l-4 border-red-500 mb-4 overflow-x-auto"
         >
-            {@html formatErrorMessage(test.error.message)}
+            {@html formatErrorMessage(error.message)}
         </div>
 
         <!-- Code Snippet Section -->
@@ -87,14 +87,18 @@
         <div
             class="bg-gray-100 text-gray-800 p-4 rounded-lg overflow-x-auto mb-4"
         >
-            <pre><code>{@html highlightSnippet(test.error.snippet)}</code></pre>
+            <pre><code>{@html highlightSnippet(error.snippet)}</code></pre>
         </div>
 
         {#if test?.test.location}
             <div class="pl-10">
-                at <a class="text-primary" href={getOnlyFilePath(test?.test.location)} target="_blank">
-                    {getOnlyFilePath(test?.test.location)} : {test?.error
-                        ?.location?.line || ""}
+                at <a
+                    class="text-primary"
+                    href={getOnlyFilePath(test?.test.location)}
+                    target="_blank"
+                >
+                    {getOnlyFilePath(test?.test.location)}:{error?.location
+                        ?.line || ""}:{error?.location?.column || ""}
                 </a>
             </div>
         {/if}

@@ -20,15 +20,17 @@
                 appearance="base"
                 className="w-full !justify-start !rounded-none"
                 iconPath={isErrorOpen ? mdiChevronDown : mdiChevronRight}
-                label="Error"
+                label="Errors"
                 onClick={() => (isErrorOpen = !isErrorOpen)}
             />
         </div>
         {#if isErrorOpen && test?.error?.message}
             <div transition:slide class="p-4">
-                <div class="bg-base-100 rounded p-4">
-                    <TestError {test} />
-                </div>
+                {#each test.errors as error}
+                    <div class="bg-base-100 rounded p-4">
+                        <TestError {test} {error} />
+                    </div>
+                {/each}
             </div>
         {/if}
     </div>
