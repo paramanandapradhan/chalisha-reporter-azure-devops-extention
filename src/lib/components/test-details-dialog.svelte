@@ -4,12 +4,19 @@
     import { mdiCloseCircle } from "../services/icon-service";
     import TestStepsCard from "./test-steps-card.svelte";
     import TestErrorCard from "./test-error-card.svelte";
+    import TestScreenshotCard from "./test-screenshot-card.svelte";
 
     type PropsType = {
         test: any;
     };
 
     let { test }: PropsType = $props();
+
+    let screenshots: any[] = $derived.by(() => {
+        return (test?.attachments || []).filter(
+            (attachment: any) => attachment?.name == "screenshot",
+        );
+    });
 </script>
 
 <div class="px-4">
@@ -56,6 +63,12 @@
     {#if test?.error}
         <div class="my-6">
             <TestErrorCard {test} />
+        </div>
+    {/if}
+
+    {#if screenshots}
+        <div class="my-6">
+         <TestScreenshotCard {screenshots} /> 
         </div>
     {/if}
 </div>

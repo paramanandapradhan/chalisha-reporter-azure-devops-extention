@@ -1,9 +1,12 @@
 import { getDefaultScopedValue, setDefaultScopedValue } from "./data.service";
 
 
-const KEY_SETTINGS = 'cp-chalisha-reporter.settings'
+const KEY_SETTINGS_SERVICE = 'cp-chalisha-reporter.settings'
+const KEY_REPORT_SERVICE = 'cp-chalisha-reporter.settings'
 
-export const KEY_SETTINGS_CONTEXT = Symbol(KEY_SETTINGS);
+export const KEY_SETTINGS_SERVICE_CONTEXT = Symbol(KEY_SETTINGS_SERVICE);
+export const KEY_REPORT_SERVICE_CONTEXT = Symbol(KEY_REPORT_SERVICE);
+
 
 export type SettingType = {
     blobStorageAccount?: string;
@@ -20,13 +23,13 @@ export class SettingsService {
     }
 
     async load() {
-        this.settings = await getDefaultScopedValue(KEY_SETTINGS) || null;
+        this.settings = await getDefaultScopedValue(KEY_SETTINGS_SERVICE) || null;
         return this;
     }
 
     async setSettings(value: SettingType) {
         try {
-            await setDefaultScopedValue(KEY_SETTINGS, value);
+            await setDefaultScopedValue(KEY_SETTINGS_SERVICE, value);
             await this.load();
         } catch (error) {
             console.error(error);
