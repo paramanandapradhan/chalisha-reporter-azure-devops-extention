@@ -22,7 +22,7 @@
     }: PropsType = $props();
 
     let sscreenshotSasUrl: string | null = $derived.by(() => {
-        console.log("screen shot test", test);
+        console.log("screen shot test", testSuite);
         if (
             settingsService &&
             reportService &&
@@ -31,7 +31,7 @@
             testSuite
         ) {
             let screenshotPath = screenshot?.path.replace(
-                testSuite.reportDir,
+                testSuite.reportDir + "/",
                 "",
             );
             if (screenshotPath) {
@@ -39,11 +39,6 @@
             }
         }
         return null;
-    });
-
-    $effect(() => {
-        console.log("settingsService", settingsService);
-        console.log("reportService", reportService);
     });
 
     function handleDownload() {
