@@ -4,16 +4,13 @@
 
   import "./tailwind.css";
 
-  import Settings from "./lib/components/settings.svelte";
-  import {
-    KEY_REPORT_SERVICE_CONTEXT,
-    KEY_SETTINGS_SERVICE_CONTEXT,
-    SettingsService,
-  } from "./lib/services/settings.service";
   import { Spinner } from "@cloudparker/moldex.js";
   import Home from "./lib/components/home.svelte";
+  import Settings from "./lib/components/settings.svelte";
   import { ReportService } from "./lib/services/report.service";
-  import { getContext, setContext } from "svelte";
+  import {
+      SettingsService
+  } from "./lib/services/settings.service";
 
   enum RoutersEnum {
     SETTINGS,
@@ -32,11 +29,6 @@
         await ensureSettings();
         if (settingsService) {
           reportService = await new ReportService(settingsService).load();
-          setContext(KEY_SETTINGS_SERVICE_CONTEXT, settingsService);
-          setContext(KEY_REPORT_SERVICE_CONTEXT, reportService);
-
-          console.log('KEY_SETTINGS_SERVICE_CONTEXT', getContext(KEY_SETTINGS_SERVICE_CONTEXT));
-          console.log('KEY_REPORT_SERVICE_CONTEXT', getContext(KEY_REPORT_SERVICE_CONTEXT));
         }
       });
     }

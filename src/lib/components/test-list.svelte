@@ -4,13 +4,18 @@
     import { browsersColors } from "../services/utils.service";
     import BrowerNameChip from "./brower-name-chip.svelte";
     import { openTestDetailsDialog } from "../services/reports.ui.service";
+    import type { SettingsService } from "../services/settings.service";
+    import type { ReportService } from "../services/report.service";
 
     type PropsType = {
+        testSuite:any,
         tests: any[];
         searchText?: string;
+        settingsService: SettingsService;
+        reportService: ReportService;
     };
 
-    let { tests, searchText }: PropsType = $props();
+    let { testSuite, tests, searchText, settingsService, reportService }: PropsType = $props();
 
     let filteredTests = $derived.by(() => {
         if (searchText) {
@@ -28,7 +33,7 @@
 
     function handleOpenTestDetails(test: any) {
         if (test) {
-            openTestDetailsDialog(test)
+            openTestDetailsDialog(testSuite, test,  settingsService, reportService);
         }
     }
 </script>

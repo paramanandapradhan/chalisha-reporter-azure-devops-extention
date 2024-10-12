@@ -1,36 +1,48 @@
 import { openDialog } from "@cloudparker/moldex.js";
 import TestReportDialog from "../components/test-report-dialog.svelte";
 import TestDetailsDialog from "../components/test-details-dialog.svelte";
- 
-export async function openTestReportDialog(reportJson: any) {
+import type { SettingsService } from "./settings.service";
+import type { ReportService } from "./report.service";
+
+export async function openTestReportDialog(testSuite: any, settingsService: SettingsService, reportService: ReportService) {
 
     await openDialog({
         bodyComponent: TestReportDialog,
         props: {
-            reportJson,
+            testSuite,
+            settingsService,
+            reportService
         },
         title: "Report",
         hasHeader: true,
         hasTitle: true,
         size: 'full',
         hasHeaderClose: true,
-        hasHeaderBack:true,
+        hasHeaderBack: true,
     })
 }
 
 
-export async function openTestDetailsDialog(test: any) {
+export async function openTestDetailsDialog(
+    testSuite: any,
+    test: any,
+    settingsService: SettingsService,
+    reportService: ReportService
+) {
 
     await openDialog({
         bodyComponent: TestDetailsDialog,
         props: {
+            testSuite,
             test,
+            settingsService,
+            reportService
         },
         title: "Test Details",
         hasHeader: true,
         hasTitle: true,
         size: 'full',
-        hasHeaderBack:true,
+        hasHeaderBack: true,
         hasHeaderClose: true
     })
 }

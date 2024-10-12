@@ -5,12 +5,17 @@
     import TestStepsCard from "./test-steps-card.svelte";
     import TestErrorCard from "./test-error-card.svelte";
     import TestScreenshotCard from "./test-screenshot-card.svelte";
+    import type { SettingsService } from "../services/settings.service";
+    import type { ReportService } from "../services/report.service";
 
     type PropsType = {
+        testSuite: any;
         test: any;
+        settingsService: SettingsService;
+        reportService: ReportService;
     };
 
-    let { test }: PropsType = $props();
+    let { testSuite, test, settingsService, reportService }: PropsType = $props();
 
     let screenshots: any[] = $derived.by(() => {
         return (test?.attachments || []).filter(
@@ -68,7 +73,13 @@
 
     {#if screenshots}
         <div class="my-6">
-         <TestScreenshotCard {screenshots} /> 
+            <TestScreenshotCard
+                {testSuite}
+                {test}
+                {screenshots}
+                {settingsService}
+                {reportService}
+            />
         </div>
     {/if}
 </div>

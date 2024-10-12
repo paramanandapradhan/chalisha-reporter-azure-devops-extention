@@ -1,26 +1,42 @@
 <script lang="ts">
-    import { getContext } from "svelte";
-    import {
-        KEY_REPORT_SERVICE_CONTEXT,
-        KEY_SETTINGS_SERVICE_CONTEXT,
-        SettingsService,
-    } from "../services/settings.service";
+    import { Button, downloadFile, downloadURI } from "@cloudparker/moldex.js";
     import type { ReportService } from "../services/report.service";
+    import { SettingsService } from "../services/settings.service";
 
-    let { screenshot, index }: { screenshot: any; index: number } = $props();
+    type PropsType = {
+        testSuite: any;
+        test: any;
+        screenshot: any;
+        index: number;
+        settingsService: SettingsService;
+        reportService: ReportService;
+    };
 
-    let isReady = $state(false);
+    let {
+        testSuite,
+        test,
+        screenshot,
+        index,
+        settingsService,
+        reportService,
+    }: PropsType = $props();
 
-    let settingsService: SettingsService | null = $derived.by(() => {
-        if (screenshot) {
-            return getContext(KEY_SETTINGS_SERVICE_CONTEXT);
-        }
-        return null;
-    });
-
-    let reportService: ReportService | null = $derived.by(() => {
-        if (screenshot) {
-            return getContext(KEY_REPORT_SERVICE_CONTEXT);
+    let sscreenshotSasUrl: string | null = $derived.by(() => {
+        console.log("screen shot test", test);
+        if (
+            settingsService &&
+            reportService &&
+            screenshot?.path &&
+            test &&
+            testSuite
+        ) {
+            let screenshotPath = screenshot?.path.replace(
+                testSuite.reportDir,
+                "",
+            );
+            if (screenshotPath) {
+                return `${settingsService.blobHost}/${testSuite.reportDir}/${testSuite.appName}/${testSuite.runId}/${screenshotPath}?${settingsService.sasToken}`;
+            }
         }
         return null;
     });
@@ -29,18 +45,27 @@
         console.log("settingsService", settingsService);
         console.log("reportService", reportService);
     });
+
+    function handleDownload() {
+        if (sscreenshotSasUrl) {
+            downloadURI(sscreenshotSasUrl, "screenshot.png");
+        }
+    }
 </script>
 
-{#if settingsService && reportService && screenshot}
-    {@const sasUrl = `${settingsService.blobHost}/${screenshot.path}?${settingsService.sasToken}`}
-    <div class="m-4 p-4 bg-base-100">
-        <div class="h-96">
-            <img src={sasUrl} alt="screenshot-{index}" />
+{#if sscreenshotSasUrl}
+    <div class="p-4">
+        <div>
+            <img
+                src={sscreenshotSasUrl}
+                alt="screenshot-{index}"
+                class="h-72"
+            />
         </div>
-        <div class="mt-4">
-            <a href={sasUrl} download="screenshot-{index}.png">
+        <div class="p-4">
+            <Button appearance="primary" onClick={handleDownload}>
                 Download Screenshot
-            </a>
+            </Button>
         </div>
     </div>
 {/if}

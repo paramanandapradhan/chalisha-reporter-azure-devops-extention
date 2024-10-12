@@ -3,16 +3,20 @@
     import { groupBy, type GroupedObject } from "../services/utils.service";
     import { slide } from "svelte/transition";
     import TestList from "./test-list.svelte";
+    import type { SettingsService } from "../services/settings.service";
+    import type { ReportService } from "../services/report.service";
 
     type PropsType = {
-        reportJson: any;
+        testSuite: any;
+        settingsService:SettingsService,
+        reportService:ReportService
     };
-    let { reportJson }: PropsType = $props();
+    let { testSuite , settingsService, reportService}: PropsType = $props();
 
     let selectedGroup: string | null = $state(null);
 
     let reportGroups: GroupedObject<any> = $derived.by(() => {
-        return groupBy(reportJson.tests || [], "test.suiteTitle");
+        return groupBy(testSuite.tests || [], "test.suiteTitle");
     });
 
     function handleSelectGroup(key: string) {
@@ -39,7 +43,7 @@
             />
             {#if selectedGroup == groupKey}
                 <div transition:slide>
-                    <TestList tests={reportGroups[groupKey]} />
+                    <TestList {testSuite} tests={reportGroups[groupKey]} {settingsService} { reportService} />
                 </div>
             {/if}
         </div>

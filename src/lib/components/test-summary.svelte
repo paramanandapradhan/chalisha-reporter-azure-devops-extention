@@ -89,10 +89,10 @@
     async function  handleOpenReport(item: TestResultType){
         if(appName &&  item?.runId){
             let loader = await openLoadingDialog();
-            let reportJson = await reportService.fetchTestReport(appName, item.runId );
+            let testSuite = await reportService.fetchTestReport(appName, item.runId );
             loader.closeDialog();
-            if(reportJson) {
-                openTestReportDialog(reportJson);
+            if(testSuite) {
+                openTestReportDialog(testSuite, settingsService, reportService);
             }   
         }
 
